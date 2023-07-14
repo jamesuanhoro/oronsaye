@@ -9,45 +9,223 @@ styler::style_dir()
 #    http://shiny.rstudio.com/
 #
 
+clean_para <- function(true_paras) {
+  clean_paras <- sapply(true_paras, function(para) {
+    para <- trimws(tolower(para))
+    if (substr(para, 1, 3) == "the") {
+      para <- trimws(substr(para, 4, 1e5))
+    }
+
+    # space clean
+    para_words <- strsplit(para, " ")[[1]]
+    para_words <- sapply(para_words, function(word) {
+      if (word == "") {
+        word <- NULL
+      } else if (!word %in% c("the", "of", "and")) {
+        word <- tools::toTitleCase(word)
+      }
+      return(word)
+    })
+    para <- paste0(trimws(para_words), collapse = " ")
+
+    # comma clean
+    para_words <- strsplit(para, ",")[[1]]
+    if (length(para_words) == 2) {
+      para_words[2] <- tools::toTitleCase(para_words[2])
+    }
+    para <- paste0(trimws(para_words), collapse = ", ")
+
+    # paren clean
+    para_words <- strsplit(para, "\\(")[[1]]
+    if (length(para_words) == 2) {
+      para_words[2] <- toupper(para_words[2])
+    }
+    para <- paste0(trimws(para_words), collapse = " (")
+
+    return(para)
+  })
+  return(clean_paras)
+}
+
+clean_action <- function(true_actions) {
+  clean_actions <- sort(unique(tolower(unlist(strsplit(true_actions, "\\/")))))
+  return(clean_actions)
+}
+
+action_interpreter <- function(action, para, comment_1 = NULL) {
+  action <- tolower(trimws(action))
+  comment_1 <- trimws(comment_1)
+  text <- ""
+  if (action == "") {
+    text <- paste0("There is no recommendation for the ", para, ".")
+  } else if (grepl("merged", action)) {
+    text <- paste0(
+      "The ", para, " will be merged with the ",
+      comment_1, "."
+    )
+  } else if (grepl("transferred", action)) {
+    text <- paste0(
+      "The operations of the ", para, " will be transferred to the ",
+      comment_1, "."
+    )
+  } else if (grepl("transformed", action)) {
+    text <- paste0(
+      "The ", para,
+      " will be transformed to an extra-ministerial department in the ",
+      comment_1, "."
+    )
+  } else if (grepl("subsumed", action)) {
+    text <- paste0(
+      "The ", para, " will be subsumed under the ", comment_1, "."
+    )
+  } else if (action == "cease funding") {
+    text <- paste0("The ", para, " will cease to be funded.")
+  } else if (action == "amended") {
+    text <- paste0("The operations of the ", para, " will be amended.")
+  } else if (action == "abolished") {
+    text <- paste0("The ", para, " will be abolished.")
+  } else if (action == "self funding") {
+    text <- paste0("The ", para, " will become self-funding.")
+  } else if (action == "privatized") {
+    text <- paste0("The ", para, " will be privatized.")
+  } else if (grepl("commercial", action)) {
+    text <- paste0(
+      "The operations of the ", para, " will be subject to commercialization."
+    )
+  } else if (grepl("liquidated", action)) {
+    text <- paste0("The ", para, " will be liquidated.")
+  }
+
+  return(text)
+}
+
+parastatal_selection_fun <- function(
+    selected_para, true_para_list, clean_para_list, dat) {
+  parastatal <- NULL
+  print(selected_para)
+
+  if (selected_para == "") {
+    return("")
+  }
+
+  true_para <- true_para_list[which(clean_para_list == selected_para)]
+  sub_dat <- dat[parastatal == true_para]
+
+  result_text <- action_interpreter(
+    sub_dat$action, selected_para, sub_dat$comment_1
+  )
+  return(result_text)
+}
+
+action_selection_fun <- function(
+    selected_action, dat) {
+  action <- NULL
+  print(selected_action)
+
+  if (length(selected_action) == 1) {
+    if (selected_action == "") {
+      return("")
+    }
+  }
+
+  para_list <- c()
+  for (sel in selected_action) {
+    para_list <- c(para_list, dat[grepl(sel, action)]$parastatal)
+  }
+
+  para_list <- clean_para(sort(unique(para_list)))
+
+  result_text <- paste0(para_list, collapse = "\n")
+  print(result_text)
+  return(result_text)
+}
+
+library(data.table)
 library(shiny)
+library(shinyWidgets)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
   # Application title
-  titlePanel("Old Faithful Geyser Data"),
-
-  # Sidebar with a slider input for number of bins
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("bins",
-        "Number of bins:",
-        min = 1,
-        max = 50,
-        value = 30
+  titlePanel("Steve Oronsaye Report"),
+  fluidRow(
+    column(
+      5,
+      pickerInput(
+        "parastatal_select",
+        "Search by Government Agency",
+        choices = NA,
+        options = pickerOptions(
+          liveSearch = TRUE,
+          actionsBox = TRUE,
+          size = "auto"
+        )
       )
-    ),
-
-    # Show a plot of the generated distribution
-    mainPanel(
-      plotOutput("distPlot")
     )
-  )
+  ),
+  fluidRow(
+    column(
+      10,
+      textOutput("parastatal_text"),
+      offset = 1
+    )
+  ),
+  hr(),
+  fluidRow(
+    column(
+      8,
+      awesomeCheckboxGroup(
+        "action_select", "Search by Proposed Action",
+        choices = NA, width = "100%"
+      )
+    )
+  ),
+  fluidRow(
+    column(
+      10,
+      verbatimTextOutput("action_text"),
+      offset = 1
+    )
+  ),
+  hr(),
+  fluidRow()
 )
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
-  output$distPlot <- renderPlot({
-    # generate bins based on input$bins from ui.R
-    x <- faithful[, 2]
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+server <- function(input, output, session) {
+  parastatal <- NULL
+  action <- NULL
+  dat <- data.table::fread("oronsaye_data.csv")
 
-    # draw the histogram with the specified number of bins
-    hist(x,
-      breaks = bins, col = "darkgray", border = "white",
-      xlab = "Waiting time to next eruption (in mins)",
-      main = "Histogram of waiting times"
-    )
+  true_para_list <- sort(dat[, .N, parastatal]$parastatal)
+  clean_para_list <- clean_para(true_para_list)
+
+  true_action_list <- sort(dat[, .N, action]$action)
+  clean_action_list <- clean_action(true_action_list)
+
+  updatePickerInput(
+    session, "parastatal_select",
+    choices = clean_para_list
+  )
+
+  updateAwesomeCheckboxGroup(
+    session, "action_select",
+    choices = clean_action_list,
+    inline = TRUE, status = "danger"
+  )
+
+  output$parastatal_text <- renderText({
+    return(parastatal_selection_fun(
+      input$parastatal_select,
+      true_para_list,
+      clean_para_list,
+      dat
+    ))
+  })
+
+  output$action_text <- renderText({
+    return(action_selection_fun(input$action_select, dat))
   })
 }
 
