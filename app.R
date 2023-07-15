@@ -110,7 +110,6 @@ action_interpreter <- function(
 parastatal_selection_fun <- function(
     selected_para, true_para_list, clean_para_list, dat) {
   parastatal <- NULL
-  print(selected_para)
 
   if (selected_para == "") {
     return("")
@@ -128,7 +127,6 @@ parastatal_selection_fun <- function(
 action_selection_fun <- function(
     selected_action, dat) {
   action <- NULL
-  print(selected_action)
 
   if (length(selected_action) == 1) {
     if (selected_action == "") {
@@ -144,7 +142,6 @@ action_selection_fun <- function(
   para_list <- clean_para(sort(unique(para_list)))
 
   result_text <- paste0(para_list, collapse = "\n")
-  print(result_text)
   return(result_text)
 }
 
