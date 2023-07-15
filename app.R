@@ -1,4 +1,4 @@
-# styler::style_dir()
+# styler::style_dir() #nolint
 
 #
 # This is a Shiny web application. You can run the application by clicking
@@ -52,10 +52,20 @@ clean_action <- function(true_actions) {
   return(clean_actions)
 }
 
-merger_text <- " Mergers usually lead to consolidation of staff."
-subsumed_text <- " This may lead to consolidation of staff."
-merger_text <- ""
-subsumed_text <- ""
+starter_text <- "<br><br><span style=\"color:red;\">Note: "
+merger_text <- paste0(
+  starter_text,
+  "Mergers usually lead to consolidation of staff.</span>"
+)
+subsumed_text <- paste0(
+  starter_text,
+  "This may lead to consolidation of staff.</span>"
+)
+private_text <- paste0(
+  starter_text,
+  "This may lead to staff layoffs.</span>"
+)
+# merger_text <- subsumed_text <- private_text <- "" #nolint
 
 action_interpreter <- function(
     action, para, comment_1 = NULL, comment_2 = NULL) {
@@ -78,18 +88,22 @@ action_interpreter <- function(
   } else if (grepl("transferred", action)) {
     text <- paste0(
       "The operations of the <b>", para, "</b> will be ",
-      "<b>transferred</b> to the ",
-      comment_1, "."
+      "<b>transferred</b> to the <b>",
+      comment_1, "</b>."
     )
+    text <- paste0(text, subsumed_text)
   } else if (grepl("transformed", action)) {
     text <- paste0(
-      "The ", para,
-      " will be <b>transformed</b> to an extra-ministerial department in the ",
-      comment_1, "."
+      "The <b>", para,
+      "</b> will be <b>transformed</b> to an ",
+      "<b>extra-ministerial department in the ",
+      comment_1, "</b>."
     )
+    text <- paste0(text, subsumed_text)
   } else if (grepl("subsumed", action)) {
     text <- paste0(
-      "The <b>", para, "</b> will be <b>subsumed</b> under the ", comment_1, "."
+      "The <b>", para, "</b> will be <b>subsumed</b> under the <b>",
+      comment_1, "</b>."
     )
     text <- paste0(text, subsumed_text)
   } else if (action == "cease funding") {
@@ -102,10 +116,12 @@ action_interpreter <- function(
     text <- paste0("The <b>", para, "</b> will become <b>self-funding</b>.")
   } else if (action == "privatized") {
     text <- paste0("The <b>", para, "</b> will be <b>privatized</b>.")
+    text <- paste0(text, private_text)
   } else if (grepl("commercial", action)) {
     text <- paste0(
       "The operations of the <b>", para, "</b> will be <b>commercialized</b>."
     )
+    text <- paste0(text, private_text)
   } else if (grepl("liquidated", action)) {
     text <- paste0("The <b>", para, "</b> will be <b>liquidated</b>.")
   }
@@ -127,7 +143,7 @@ parastatal_selection_fun <- function(
   result_text <- action_interpreter(
     sub_dat$action, selected_para, sub_dat$comment_1, sub_dat$comment_2
   )
-  return(result_text)
+  return(paste0("<br>", result_text))
 }
 
 action_selection_fun <- function(
