@@ -66,47 +66,48 @@ action_interpreter <- function(
     text <- paste0("There is no recommendation for the ", para, ".")
   } else if (grepl("merged", action)) {
     text <- paste0(
-      "The ", para, " will be merged with the ",
-      comment_1
+      "The <b>", para, "</b> will be <b>merged</b> with the <b>",
+      comment_1, "</b>"
     )
     if (comment_2 != "") {
       text <- paste0(
-        text, " to form the ", comment_2
+        text, " to form the <b>", comment_2, "</b>"
       )
     }
     text <- paste0(text, ".", merger_text)
   } else if (grepl("transferred", action)) {
     text <- paste0(
-      "The operations of the ", para, " will be transferred to the ",
+      "The operations of the <b>", para, "</b> will be ",
+      "<b>transferred</b> to the ",
       comment_1, "."
     )
   } else if (grepl("transformed", action)) {
     text <- paste0(
       "The ", para,
-      " will be transformed to an extra-ministerial department in the ",
+      " will be <b>transformed</b> to an extra-ministerial department in the ",
       comment_1, "."
     )
   } else if (grepl("subsumed", action)) {
     text <- paste0(
-      "The ", para, " will be subsumed under the ", comment_1, "."
+      "The <b>", para, "</b> will be <b>subsumed</b> under the ", comment_1, "."
     )
     text <- paste0(text, subsumed_text)
   } else if (action == "cease funding") {
-    text <- paste0("The ", para, " will cease to be funded.")
+    text <- paste0("The <b>", para, "</b> will <b>cease to be funded</b>.")
   } else if (action == "amended") {
-    text <- paste0("The operations of the ", para, " will be amended.")
+    text <- paste0("The operations of the <b>", para, "</b> will be amended.")
   } else if (action == "abolished") {
-    text <- paste0("The ", para, " will be abolished.")
+    text <- paste0("The <b>", para, "</b> will be <b>abolished</b>.")
   } else if (action == "self funding") {
-    text <- paste0("The ", para, " will become self-funding.")
+    text <- paste0("The <b>", para, "</b> will become <b>self-funding</b>.")
   } else if (action == "privatized") {
-    text <- paste0("The ", para, " will be privatized.")
+    text <- paste0("The <b>", para, "</b> will be <b>privatized</b>.")
   } else if (grepl("commercial", action)) {
     text <- paste0(
-      "The operations of the ", para, " will be subject to commercialization."
+      "The operations of the <b>", para, "</b> will be <b>commercialized</b>."
     )
   } else if (grepl("liquidated", action)) {
-    text <- paste0("The ", para, " will be liquidated.")
+    text <- paste0("The <b>", para, "</b> will be <b>liquidated</b>.")
   }
 
   return(text)
@@ -177,7 +178,7 @@ ui <- fluidPage(
   fluidRow(
     column(
       10,
-      textOutput("parastatal_text"),
+      htmlOutput("parastatal_text"),
       offset = 1
     )
   ),
