@@ -53,13 +53,16 @@ clean_action <- function(true_actions) {
 }
 
 starter_text <- "<br><br><span style=\"color:red;\">Note: "
-merger_text <- (
+merger_text <- paste0(
+  starter_text,
   "Mergers usually lead to consolidation of staff.</span>"
 )
-subsumed_text <- (
+subsumed_text <- paste0(
+  starter_text,
   "This may lead to consolidation of staff.</span>"
 )
-private_text <- (
+private_text <- paste0(
+  starter_text,
   "This may lead to mass layoffs.</span>"
 )
 # merger_text <- subsumed_text <- private_text <- "" #nolint
@@ -88,7 +91,7 @@ action_interpreter <- function(
       "<b>transferred</b> to the <b>",
       comment_1, "</b>."
     )
-    text <- paste0(text, starter_text, subsumed_text)
+    text <- paste0(text, subsumed_text)
   } else if (grepl("transformed", action)) {
     text <- paste0(
       "The <b>", para,
@@ -96,32 +99,32 @@ action_interpreter <- function(
       "<b>extra-ministerial department in the ",
       comment_1, "</b>."
     )
-    text <- paste0(text, starter_text, subsumed_text)
+    text <- paste0(text, subsumed_text)
   } else if (grepl("subsumed", action)) {
     text <- paste0(
       "The <b>", para, "</b> will be <b>subsumed</b> under the <b>",
       comment_1, "</b>."
     )
-    text <- paste0(text, starter_text, subsumed_text)
+    text <- paste0(text, subsumed_text)
   } else if (action == "cease funding") {
     text <- paste0("The <b>", para, "</b> will <b>cease to be funded</b>.")
-    text <- paste0(text, starter_text, private_text)
+    text <- paste0(text, private_text)
   } else if (action == "amended") {
     text <- paste0("The operations of the <b>", para, "</b> will be amended.")
   } else if (action == "abolished") {
     text <- paste0("The <b>", para, "</b> will be <b>abolished</b>.")
-    text <- paste0(text, starter_text, private_text)
+    text <- paste0(text, private_text)
   } else if (action == "self funding") {
     text <- paste0("The <b>", para, "</b> will become <b>self-funding</b>.")
-    text <- paste0(text, starter_text, private_text)
+    text <- paste0(text, private_text)
   } else if (action == "privatized") {
     text <- paste0("The <b>", para, "</b> will be <b>privatized</b>.")
-    text <- paste0(text, starter_text, private_text)
+    text <- paste0(text, private_text)
   } else if (grepl("commercial", action)) {
     text <- paste0(
       "The operations of the <b>", para, "</b> will be <b>commercialized</b>."
     )
-    text <- paste0(text, starter_text, private_text)
+    text <- paste0(text, private_text)
   } else if (grepl("liquidated", action)) {
     text <- paste0("The <b>", para, "</b> will be <b>liquidated</b>.")
   }
