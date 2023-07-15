@@ -219,7 +219,16 @@ ui <- fluidPage(
     )
   ),
   hr(),
-  fluidRow()
+  fluidRow(
+    column(
+      10,
+      downloadButton(
+        "report_link",
+        "Download the full report"
+      ),
+      offset = 1
+    )
+  )
 )
 
 # Define server logic required to draw a histogram
@@ -253,6 +262,12 @@ server <- function(input, output, session) {
       dat
     ))
   })
+
+  output$report_link <- downloadHandler(
+    filename = function() "Oronsaye Report.pdf",
+    content = function(file) file.copy("./Oronsaye_Report.pdf", file),
+    contentType = "application/pdf"
+  )
 
   output$action_text <- renderText({
     return(action_selection_fun(input$action_select, dat))
