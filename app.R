@@ -21,7 +21,7 @@ clean_para <- function(true_paras) {
     para_words <- sapply(para_words, function(word) {
       if (word == "") {
         word <- NULL
-      } else if (!word %in% c("the", "of", "and")) {
+      } else if (!word %in% c("the", "of", "and", "for", "under")) {
         word <- tools::toTitleCase(word)
       }
       return(word)
@@ -52,17 +52,25 @@ clean_action <- function(true_actions) {
   return(clean_actions)
 }
 
-action_interpreter <- function(action, para, comment_1 = NULL) {
+action_interpreter <- function(
+    action, para, comment_1 = NULL, comment_2 = NULL) {
   action <- tolower(trimws(action))
   comment_1 <- trimws(comment_1)
   text <- ""
   if (action == "") {
     text <- paste0("There is no recommendation for the ", para, ".")
   } else if (grepl("merged", action)) {
-    text <- paste0(
-      "The ", para, " will be merged with the ",
-      comment_1, "."
-    )
+    if (comment_2 == "") {
+      text <- paste0(
+        "The ", para, " will be <b>merged</b> with the ",
+        comment_1, "."
+      )
+    } else {
+      text <- paste0(
+        "The ", para, " will be <b>merged</b> with the ",
+        comment_1, " to form the ", comment_2, "."
+      )
+    }
   } else if (grepl("transferred", action)) {
     text <- paste0(
       "The operations of the ", para, " will be transferred to the ",
@@ -112,7 +120,7 @@ parastatal_selection_fun <- function(
   sub_dat <- dat[parastatal == true_para]
 
   result_text <- action_interpreter(
-    sub_dat$action, selected_para, sub_dat$comment_1
+    sub_dat$action, selected_para, sub_dat$comment_1, sub_dat$comment_2
   )
   return(result_text)
 }

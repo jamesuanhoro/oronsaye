@@ -1,5 +1,5 @@
 body_type,parastatal,action,comment_1,comment_2
-constitutional,Code of Conduct Bureau(CCB),amended/merged,EFCC and ICPC,
+constitutional,Code of Conduct Bureau (CCB),amended/merged,EFCC and ICPC,
 constitutional,Council of State (COS),,,
 constitutional,Federal Character Commission,abolished,,
 constitutional,Federal Civil Service Commission (FCSC) ,amended,Federal Public Service Commission ,
@@ -67,7 +67,7 @@ ministry of aviation,Nigerian Civil Aviation Authority (NCAA),amended/merged,Fed
 ministry of aviation,Nigerian Airspace Management Agency (NAMA),amended/merged,Federal civil aviation authority,
 ministry of aviation,Accident Investigation Bureau (AlB),amended,unified accident investigation bureau ,
 ministry of aviation,Nigerian Meteorological Agency (NIMET),amended/merged,Federal civil aviation authority,
-ministry of aviation,Federal Airports Authority of Nigeria (F AAN),privatized,,
+ministry of aviation,Federal Airports Authority of Nigeria (FAAN),privatized,,
 ministry of aviation,Nigeria College of Aviation Technology (NCAT),self funding,,
 federal ministry of communications technology,Nigerian Communications Commission (NCC),amended/merged,Communications Regulatory Authority of Nigerian (CRAN),
 federal ministry of communications technology,National Information Technology Development Agency (NITDA),amended/subsumed,Ministry of Technology,
@@ -110,7 +110,7 @@ Federal ministry of Education,Nigeria French Language Village (NFLV),,,
 Federal ministry of Environment,National Oil Spill Detection and Response Agency (NOSDRA),abolished/transferred,Department of Petroleum Resources (DPR),
 Federal ministry of Environment,National Environmental Standards and Regulations Enforcement Agency (NESREA),abolished,,
 Federal ministry of Environment,National Park Headquarters,commercialized,,
-Federal ministry of Environment,"Forestry Research Institute of Nigeria,lbadan",self funding,,
+Federal ministry of Environment,"Forestry Research Institute of Nigeria, Ibadan",self funding,,
 Federal ministry of Environment,Environmental Health Registration Council of Nigeria (EHRCN),cease funding,,
 Ministry of the Federal Capital Territory,,,,
 Federal Ministry of Finance,Federal Inland Revenue Service (FIRS),,,
@@ -133,10 +133,10 @@ Federal Ministry of Health,Specialty Hospitals,amended,Adminstration,
 Federal Ministry of Health,Medical Research Centres,amended,Administartion/Funding,
 Federal Ministry of Health,Training Institutes,self funding,,
 Federal Ministry of Health,Regulatory Bodies,self funding,,
-Federal Ministry of Health,NAFDAC,amended,Revenue remittance to government,
+Federal Ministry of Health,National Agency for Food and Drug Administration and Control (NAFDAC),amended,Revenue remittance to government,
 Federal Ministry of Health,Other Agencies under the Federal Ministry of Health,amended,law,
-federal ministry of Information,Federal Radio Corporation,amended/merged,Voice of Nigeria,
-federal ministry of Information,Voice of Nigeria,amended/merged,Federal Radio Corporation,
+federal ministry of Information,Federal Radio Corporation,amended/merged,Voice of Nigeria and Nigerian Television Authority,Federal Broadcasting Corporation of Nigeria (FBCN)
+federal ministry of Information,Voice of Nigeria,amended/merged,Federal Radio Corporation and Nigerian Television Authority,
 federal ministry of Information,Nigerian Television Authority (NTA),amended/merged,Federal Radio Corporation and Voice of Nigeria,Federal Broadcasting Corporation of Nigeria (FBCN)
 federal ministry of Information,News Agency of Nigeria (NAN),amended,law,
 federal ministry of Information,National Broadcasting Commission (NBC),amended/merged,Nigerian Communications Commission,Communications Regulatory Authority of Nigeria (CRAN)
@@ -190,7 +190,9 @@ Ministry of Power,National Power Training Institute of Nigeria (NAPTIN),abolishe
 Ministry of Power,National Rural Electrification Agency (NREA),abolished,,
 Ministry of Power,Power Holding Company of Nigeria (PHCN),privatized,,
 Ministry of Power,Transmission Company of Nigeria,,,
-Ministry of Power,Nigeria Electricity Liabilities Management Ltd./GTE (NELMCO; Nigerian Bulk Electricity Trading (NBET) PLC.,amended,"
+Ministry of Power,Nigeria Electricity Liabilities Management Ltd./GTE (NELMCO),amended,"
+Application of Sunset Clause.",
+Ministry of Power,Nigerian Bulk Electricity Trading (NBET) PLC.,amended,"
 Application of Sunset Clause.",
 Federal Ministry of Science and Technology,National Agency for Science and Engineering Infrastructure (NASENI),amended/merged,Federal Institute for Industrial Research Oshodi (FIIRO) and Projects Development Institute (PRODA),
 Federal Ministry of Science and Technology,Projects Development Institute (PRODA),amended,,
