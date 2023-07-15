@@ -1,4 +1,4 @@
-styler::style_dir()
+# styler::style_dir()
 
 #
 # This is a Shiny web application. You can run the application by clicking
@@ -52,6 +52,11 @@ clean_action <- function(true_actions) {
   return(clean_actions)
 }
 
+merger_text <- " Mergers usually lead to consolidation of staff."
+subsumed_text <- " This may lead to consolidation of staff."
+merger_text <- ""
+subsumed_text <- ""
+
 action_interpreter <- function(
     action, para, comment_1 = NULL, comment_2 = NULL) {
   action <- tolower(trimws(action))
@@ -60,17 +65,16 @@ action_interpreter <- function(
   if (action == "") {
     text <- paste0("There is no recommendation for the ", para, ".")
   } else if (grepl("merged", action)) {
-    if (comment_2 == "") {
+    text <- paste0(
+      "The ", para, " will be merged with the ",
+      comment_1
+    )
+    if (comment_2 != "") {
       text <- paste0(
-        "The ", para, " will be <b>merged</b> with the ",
-        comment_1, "."
-      )
-    } else {
-      text <- paste0(
-        "The ", para, " will be <b>merged</b> with the ",
-        comment_1, " to form the ", comment_2, "."
+        text, " to form the ", comment_2
       )
     }
+    text <- paste0(text, ".", merger_text)
   } else if (grepl("transferred", action)) {
     text <- paste0(
       "The operations of the ", para, " will be transferred to the ",
@@ -86,6 +90,7 @@ action_interpreter <- function(
     text <- paste0(
       "The ", para, " will be subsumed under the ", comment_1, "."
     )
+    text <- paste0(text, subsumed_text)
   } else if (action == "cease funding") {
     text <- paste0("The ", para, " will cease to be funded.")
   } else if (action == "amended") {
@@ -179,7 +184,7 @@ ui <- fluidPage(
   hr(),
   fluidRow(
     column(
-      8,
+      6,
       awesomeCheckboxGroup(
         "action_select", "Search by Proposed Action",
         choices = NA, width = "100%"
