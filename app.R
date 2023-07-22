@@ -141,6 +141,7 @@ parastatal_selection_fun <- function(
   }
 
   true_para <- true_para_list[which(clean_para_list == selected_para)]
+  print(true_para)
   sub_dat <- dat[parastatal == true_para]
 
   result_text <- action_interpreter(
