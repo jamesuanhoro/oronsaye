@@ -136,7 +136,7 @@ parastatal_selection_fun <- function(
     selected_para, true_para_list, clean_para_list, dat) {
   parastatal <- NULL
 
-  if (selected_para == "") {
+  if (selected_para == "NA") {
     return("")
   }
 
