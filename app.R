@@ -181,7 +181,7 @@ ui <- fluidPage(
   tags$style(HTML("
     .sl_link {
       text-align: center;
-      font-size: 20px;
+      font-size: 18px;
       margin-bottom: 50px;
     }
     .sl_dl {
@@ -194,6 +194,12 @@ ui <- fluidPage(
       margin-right: auto;
       margin-bottom: 0px;
       height: auto;
+    }
+    @media only screen and (max-width: 600px) {
+      .sl_img {
+        max-width: 30%;
+        padding-bottom: 0px;
+      }
     }
   ")),
 
@@ -256,19 +262,19 @@ ui <- fluidPage(
   hr(),
   fluidRow(
     column(
-      1,
+      3,
       tags$div(
-        id = "sl_img",
-        class = "sl_img",
-        imageOutput("sl_logo")
+        id = "sl_link",
+        class = "sl_link",
+        uiOutput("sl_web")
       )
     ),
     column(
       1,
       tags$div(
-        id = "sl_link",
-        class = "sl_link",
-        uiOutput("sl_web")
+        id = "sl_img",
+        class = "sl_img",
+        imageOutput("sl_logo")
       )
     )
   )
