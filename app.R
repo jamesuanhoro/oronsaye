@@ -85,18 +85,34 @@ action_interpreter <- function(
       )
     }
     text <- paste0(text, ".", merger_text)
-  } else if (grepl("transferred", action)) {
-    text <- paste0(
-      "The operations of the <b>", para, "</b> will be ",
-      "<b>transferred</b> to the <b>",
-      comment_1, "</b>."
-    )
-    text <- paste0(text, subsumed_text)
   } else if (grepl("transformed", action)) {
     text <- paste0(
       "The <b>", para,
       "</b> will be <b>transformed</b> to an ",
       "<b>extra-ministerial department in the ",
+      comment_1, "</b>."
+    )
+    text <- paste0(text, subsumed_text)
+  } else if (grepl("abolished/", action)) {
+    text <- paste0("The <b>", para, "</b> will be <b>abolished</b>, and ")
+    if (grepl("transferred", action)) {
+      text <- paste0(
+        text,
+        "its operations will be <b>transferred</b> to the <b>",
+        comment_1, "</b>."
+      )
+    } else if (grepl("subsumed", action)) {
+      text <- paste0(
+        text,
+        "its operations will be <b>subsumed</b> under the <b>",
+        comment_1, "</b>."
+      )
+    }
+    text <- paste0(text, private_text)
+  } else if (grepl("transferred", action)) {
+    text <- paste0(
+      "The operations of the <b>", para, "</b> will be ",
+      "<b>transferred</b> to the <b>",
       comment_1, "</b>."
     )
     text <- paste0(text, subsumed_text)
