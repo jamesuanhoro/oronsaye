@@ -1,4 +1,4 @@
-# styler::style_dir()
+# styler::style_dir() #nolint
 
 #
 # This is a Shiny web application. You can run the application by clicking
@@ -52,10 +52,20 @@ clean_action <- function(true_actions) {
   return(clean_actions)
 }
 
-merger_text <- " Mergers usually lead to consolidation of staff."
-subsumed_text <- " This may lead to consolidation of staff."
-merger_text <- ""
-subsumed_text <- ""
+starter_text <- "<br><br><span style=\"color:red;\">Note: "
+merger_text <- paste0(
+  starter_text,
+  "Mergers usually lead to consolidation of staff.</span>"
+)
+subsumed_text <- paste0(
+  starter_text,
+  "This may lead to consolidation of staff.</span>"
+)
+private_text <- paste0(
+  starter_text,
+  "This may lead to mass layoffs.</span>"
+)
+# merger_text <- subsumed_text <- private_text <- "" #nolint
 
 action_interpreter <- function(
     action, para, comment_1 = NULL, comment_2 = NULL) {
@@ -66,47 +76,57 @@ action_interpreter <- function(
     text <- paste0("There is no recommendation for the ", para, ".")
   } else if (grepl("merged", action)) {
     text <- paste0(
-      "The ", para, " will be merged with the ",
-      comment_1
+      "The <b>", para, "</b> will be <b>merged</b> with the <b>",
+      comment_1, "</b>"
     )
     if (comment_2 != "") {
       text <- paste0(
-        text, " to form the ", comment_2
+        text, " to form the <b>", comment_2, "</b>"
       )
     }
     text <- paste0(text, ".", merger_text)
   } else if (grepl("transferred", action)) {
     text <- paste0(
-      "The operations of the ", para, " will be transferred to the ",
-      comment_1, "."
+      "The operations of the <b>", para, "</b> will be ",
+      "<b>transferred</b> to the <b>",
+      comment_1, "</b>."
     )
+    text <- paste0(text, subsumed_text)
   } else if (grepl("transformed", action)) {
     text <- paste0(
-      "The ", para,
-      " will be transformed to an extra-ministerial department in the ",
-      comment_1, "."
+      "The <b>", para,
+      "</b> will be <b>transformed</b> to an ",
+      "<b>extra-ministerial department in the ",
+      comment_1, "</b>."
     )
+    text <- paste0(text, subsumed_text)
   } else if (grepl("subsumed", action)) {
     text <- paste0(
-      "The ", para, " will be subsumed under the ", comment_1, "."
+      "The <b>", para, "</b> will be <b>subsumed</b> under the <b>",
+      comment_1, "</b>."
     )
     text <- paste0(text, subsumed_text)
   } else if (action == "cease funding") {
-    text <- paste0("The ", para, " will cease to be funded.")
+    text <- paste0("The <b>", para, "</b> will <b>cease to be funded</b>.")
+    text <- paste0(text, private_text)
   } else if (action == "amended") {
-    text <- paste0("The operations of the ", para, " will be amended.")
+    text <- paste0("The operations of the <b>", para, "</b> will be amended.")
   } else if (action == "abolished") {
-    text <- paste0("The ", para, " will be abolished.")
+    text <- paste0("The <b>", para, "</b> will be <b>abolished</b>.")
+    text <- paste0(text, private_text)
   } else if (action == "self funding") {
-    text <- paste0("The ", para, " will become self-funding.")
+    text <- paste0("The <b>", para, "</b> will become <b>self-funding</b>.")
+    text <- paste0(text, private_text)
   } else if (action == "privatized") {
-    text <- paste0("The ", para, " will be privatized.")
+    text <- paste0("The <b>", para, "</b> will be <b>privatized</b>.")
+    text <- paste0(text, private_text)
   } else if (grepl("commercial", action)) {
     text <- paste0(
-      "The operations of the ", para, " will be subject to commercialization."
+      "The operations of the <b>", para, "</b> will be <b>commercialized</b>."
     )
+    text <- paste0(text, private_text)
   } else if (grepl("liquidated", action)) {
-    text <- paste0("The ", para, " will be liquidated.")
+    text <- paste0("The <b>", para, "</b> will be <b>liquidated</b>.")
   }
 
   return(text)
@@ -116,17 +136,18 @@ parastatal_selection_fun <- function(
     selected_para, true_para_list, clean_para_list, dat) {
   parastatal <- NULL
 
-  if (selected_para == "") {
+  if (selected_para == "NA") {
     return("")
   }
 
   true_para <- true_para_list[which(clean_para_list == selected_para)]
+  print(true_para)
   sub_dat <- dat[parastatal == true_para]
 
   result_text <- action_interpreter(
     sub_dat$action, selected_para, sub_dat$comment_1, sub_dat$comment_2
   )
-  return(result_text)
+  return(paste0("<br>", result_text))
 }
 
 action_selection_fun <- function(
@@ -157,6 +178,31 @@ library(shinyWidgets)
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
+  tags$style(HTML("
+    .sl_link {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 50px;
+    }
+    .sl_dl {
+      text-align: center;
+    }
+    .sl_img {
+      max-width: 80%;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0px;
+      height: auto;
+    }
+    @media only screen and (max-width: 600px) {
+      .sl_img {
+        max-width: 30%;
+        padding-bottom: 0px;
+      }
+    }
+  ")),
+
   # Application title
   titlePanel("Steve Oronsaye Report"),
   fluidRow(
@@ -177,7 +223,7 @@ ui <- fluidPage(
   fluidRow(
     column(
       10,
-      textOutput("parastatal_text"),
+      htmlOutput("parastatal_text"),
       offset = 1
     )
   ),
@@ -199,7 +245,39 @@ ui <- fluidPage(
     )
   ),
   hr(),
-  fluidRow()
+  fluidRow(
+    column(
+      1,
+      tags$div(
+        id = "sl_dl",
+        class = "sl_dl",
+        downloadButton(
+          "report_link",
+          "Download the full report"
+        )
+      ),
+      offset = 1
+    )
+  ),
+  hr(),
+  fluidRow(
+    column(
+      3,
+      tags$div(
+        id = "sl_link",
+        class = "sl_link",
+        uiOutput("sl_web")
+      )
+    ),
+    column(
+      1,
+      tags$div(
+        id = "sl_img",
+        class = "sl_img",
+        imageOutput("sl_logo")
+      )
+    )
+  )
 )
 
 # Define server logic required to draw a histogram
@@ -234,8 +312,30 @@ server <- function(input, output, session) {
     ))
   })
 
+  output$report_link <- downloadHandler(
+    filename = function() "Oronsaye Report.pdf",
+    content = function(file) file.copy("./Oronsaye_Report.pdf", file),
+    contentType = "application/pdf"
+  )
+
   output$action_text <- renderText({
     return(action_selection_fun(input$action_select, dat))
+  })
+
+  output$sl_logo <- renderImage({
+    list(
+      src = "./VN.png",
+      width = "100%"
+    )
+  }, deleteFile = FALSE)
+
+  sl_url <- a(
+    "SocialistLabour.com.ng",
+    href = "https://socialistlabour.com.ng/",
+    target = "_blank"
+  )
+  output$sl_web <- renderUI({
+    tagList(sl_url)
   })
 }
 
