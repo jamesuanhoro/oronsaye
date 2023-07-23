@@ -180,8 +180,20 @@ ui <- fluidPage(
 
   tags$style(HTML("
     .sl_link {
-      text-align: middle;
+      text-align: center;
       font-size: 20px;
+      margin-bottom: 50px;
+    }
+    .sl_dl {
+      text-align: center;
+    }
+    .sl_img {
+      max-width: 80%;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0px;
+      height: auto;
     }
   ")),
 
@@ -229,10 +241,14 @@ ui <- fluidPage(
   hr(),
   fluidRow(
     column(
-      10,
-      downloadButton(
-        "report_link",
-        "Download the full report"
+      1,
+      tags$div(
+        id = "sl_dl",
+        class = "sl_dl",
+        downloadButton(
+          "report_link",
+          "Download the full report"
+        )
       ),
       offset = 1
     )
@@ -241,10 +257,14 @@ ui <- fluidPage(
   fluidRow(
     column(
       1,
-      imageOutput("sl_logo")
+      tags$div(
+        id = "sl_img",
+        class = "sl_img",
+        imageOutput("sl_logo")
+      )
     ),
     column(
-      10,
+      1,
       tags$div(
         id = "sl_link",
         class = "sl_link",
@@ -304,7 +324,9 @@ server <- function(input, output, session) {
   }, deleteFile = FALSE)
 
   sl_url <- a(
-    "SocialistLabour.com.ng", href = "https://socialistlabour.com.ng/"
+    "SocialistLabour.com.ng",
+    href = "https://socialistlabour.com.ng/",
+    target = "_blank"
   )
   output$sl_web <- renderUI({
     tagList(sl_url)
