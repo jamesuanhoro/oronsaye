@@ -178,6 +178,13 @@ library(shinyWidgets)
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
+  tags$style(HTML("
+    .sl_link {
+      text-align: middle;
+      font-size: 20px;
+    }
+  ")),
+
   # Application title
   titlePanel("Steve Oronsaye Report"),
   fluidRow(
@@ -229,6 +236,21 @@ ui <- fluidPage(
       ),
       offset = 1
     )
+  ),
+  hr(),
+  fluidRow(
+    column(
+      1,
+      imageOutput("sl_logo")
+    ),
+    column(
+      10,
+      tags$div(
+        id = "sl_link",
+        class = "sl_link",
+        uiOutput("sl_web")
+      )
+    )
   )
 )
 
@@ -272,6 +294,20 @@ server <- function(input, output, session) {
 
   output$action_text <- renderText({
     return(action_selection_fun(input$action_select, dat))
+  })
+
+  output$sl_logo <- renderImage({
+    list(
+      src = "./VN.png",
+      width = "100%"
+    )
+  }, deleteFile = FALSE)
+
+  sl_url <- a(
+    "SocialistLabour.com.ng", href = "https://socialistlabour.com.ng/"
+  )
+  output$sl_web <- renderUI({
+    tagList(sl_url)
   })
 }
 
