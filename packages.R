@@ -1,4 +1,4 @@
-# init.R
+# packages.R
 #
 # Example R code to install packages if not already installed
 #
